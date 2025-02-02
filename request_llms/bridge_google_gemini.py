@@ -21,6 +21,12 @@ def predict_no_ui_long_connection(inputs:str, llm_kwargs:dict, history:list=[], 
     if get_conf("GEMINI_API_KEY") == "":
         raise ValueError(f"请配置 GEMINI_API_KEY。")
 
+    # 修改 llm_kwargs，添加或修正 stopSequences 参数
+    if 'stopSequences' not in llm_kwargs:
+        llm_kwargs['stopSequences'] = 1  # 设置为有效值 (1-16)
+    elif llm_kwargs['stopSequences'] == 0:
+        llm_kwargs['stopSequences'] = 1  # 如果是0，修正为有效值
+        
     genai = GoogleChatInit(llm_kwargs)
     watch_dog_patience = 5  # 看门狗的耐心, 设置5秒即可
     gpt_replying_buffer = ''
@@ -112,10 +118,30 @@ def predict(inputs:str, llm_kwargs:dict, plugin_kwargs:dict, chatbot:ChatBotWith
             log_chat(llm_model=llm_kwargs["llm_model"], input_str=inputs, output_str=gpt_replying_buffer)
             yield from update_ui(chatbot=chatbot, history=history)
         if error_match:
-            history = history[-2]  # 错误的不纳入对话
-            chatbot[-1] = (inputs, gpt_replying_buffer + f"对话错误，请查看message\n\n```\n{error_match.group(1)}\n```")
-            yield from update_ui(chatbot=chatbot, history=history)
-            raise RuntimeError('对话错误')
+            # history = history[-2]  # 错误的不纳入对话
+            # chatbot[-1] = (inputs, gpt_replying_buffer + f"对话错误，请查看message\n\n```\n{error_match.group(1)}\n```")
+            # yield from update_ui(chatbot=chatbot, history=history)
+            # raise RuntimeError('对话错误')
+            try:
+                # Update history safely
+                if len(history) >= 2:
+                    history = history[:-2]  # Remove last two entries instead of direct indexing
+                
+                # Construct complete error message
+                error_message = f"对话错误: {error_match.group(1) if error_match else '未知错误'}"
+                
+                # Update chatbot with error info
+                chatbot[-1] = (inputs, gpt_replying_buffer + f"\n\n```\n{error_message}\n```")
+                
+                # Yield UI update instead of raising exception
+                yield from update_ui(chatbot=chatbot, history=history, msg=error_message)
+                return
+            except Exception as e:
+                # Catch any other errors during error handling
+                error_message = f"处理错误信息时发生异常: {str(e)}"
+                chatbot[-1] = (inputs, error_message)
+                yield from update_ui(chatbot=chatbot, history=history, msg=error_message)
+                return
     if not gpt_replying_buffer:
         history = history[-2]  # 错误的不纳入对话
         chatbot[-1] = (inputs, gpt_replying_buffer + f"触发了Google的安全访问策略，没有回答\n\n```\n{gpt_security_policy}\n```")
