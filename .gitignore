@@ -163,3 +163,6 @@ objdump*
 TODO
 experimental_mods
 search_results
+test_DeepLX.py
+test_github_models_api.py
+test_moonshot.py

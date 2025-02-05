@@ -38,6 +38,9 @@ from .bridge_google_gemini import predict_no_ui_long_connection  as genai_noui
 from .bridge_zhipu import predict_no_ui_long_connection as zhipu_noui
 from .bridge_zhipu import predict as zhipu_ui
 
+from .bridge_hf import predict_no_ui_long_connection as hf_noui
+from .bridge_hf import predict as hf_ui
+
 from .bridge_taichu import predict_no_ui_long_connection as taichu_noui
 from .bridge_taichu import predict as taichu_ui
 
@@ -76,6 +79,7 @@ newbing_endpoint = "wss://sydney.bing.com/sydney/ChatHub"
 gemini_endpoint = "https://generativelanguage.googleapis.com/v1beta/models"
 claude_endpoint = "https://api.anthropic.com/v1/messages"
 cohere_endpoint = "https://api.cohere.ai/v1/chat"
+groq_endpoint = 'https://api.groq.com/openai/v1/chat/completions'
 ollama_endpoint = "http://localhost:11434/api/chat"
 yimodel_endpoint = "https://api.lingyiwanwu.com/v1/chat/completions"
 deepseekapi_endpoint = "https://api.deepseek.com/v1/chat/completions"
@@ -98,6 +102,7 @@ if newbing_endpoint in API_URL_REDIRECT: newbing_endpoint = API_URL_REDIRECT[new
 if gemini_endpoint in API_URL_REDIRECT: gemini_endpoint = API_URL_REDIRECT[gemini_endpoint]
 if claude_endpoint in API_URL_REDIRECT: claude_endpoint = API_URL_REDIRECT[claude_endpoint]
 if cohere_endpoint in API_URL_REDIRECT: cohere_endpoint = API_URL_REDIRECT[cohere_endpoint]
+if groq_endpoint in API_URL_REDIRECT: groq_endpoint = API_URL_REDIRECT[groq_endpoint]
 if ollama_endpoint in API_URL_REDIRECT: ollama_endpoint = API_URL_REDIRECT[ollama_endpoint]
 if yimodel_endpoint in API_URL_REDIRECT: yimodel_endpoint = API_URL_REDIRECT[yimodel_endpoint]
 if deepseekapi_endpoint in API_URL_REDIRECT: deepseekapi_endpoint = API_URL_REDIRECT[deepseekapi_endpoint]
@@ -227,7 +232,37 @@ model_info = {
         "token_cnt": get_token_num_gpt4,
     },
 
+    "gpt-4o-mini-2024-07-18": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "has_multimodal_capacity": True,
+        "max_token": 128000,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+
     "gpt-4o-2024-05-13": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "has_multimodal_capacity": True,
+        "endpoint": openai_endpoint,
+        "max_token": 128000,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+
+    "gpt-4o-2024-08-06": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "has_multimodal_capacity": True,
+        "endpoint": openai_endpoint,
+        "max_token": 128000,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+
+    "gpt-4o-all": {
         "fn_with_ui": chatgpt_ui,
         "fn_without_ui": chatgpt_noui,
         "has_multimodal_capacity": True,
@@ -349,8 +384,175 @@ model_info = {
         "tokenizer": tokenizer_gpt4,
         "token_cnt": get_token_num_gpt4,
     },
-
-
+    "one-api-claude-3-5-sonnet-20240620": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-claude-3-haiku-20240307": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 4096,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-claude-3-sonnet-20240229": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 4096,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-claude-3-opus-20240229": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 4096,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-gemini-1.5-pro": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-gemini-1.5-flash": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-Doubao-pro-128k": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-Doubao-lite-128k": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-Baichuan4": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-Baichuan3-Turbo-128k": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-glm-4-plus": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-glm-4-long": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-qwen-2-72b": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-qwen-max": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-SparkDesk-v4.0Ultra": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-yi-large": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    # "one-api-Qwen/Qwen2.5-72B-Instruct": {
+    #     "fn_with_ui": chatgpt_ui,
+    #     "fn_without_ui": chatgpt_noui,
+    #     "endpoint": openai_endpoint,
+    #     "max_token": 8192,
+    #     "tokenizer": tokenizer_gpt4,
+    #     "token_cnt": get_token_num_gpt4,
+    # },
+    "one-api-nvidia/llama-3.1-nemotron-70b-instruct": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-meta/llama-3.1-405b-instruct": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    # SiliconFlow
+    "one-api-siliconflow/deepseek-ai/DeepSeek-V3": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
+    "one-api-siliconflow/deepseek-ai/DeepSeek-R1": {
+        "fn_with_ui": chatgpt_ui,
+        "fn_without_ui": chatgpt_noui,
+        "endpoint": openai_endpoint,
+        "max_token": 8192,
+        "tokenizer": tokenizer_gpt4,
+        "token_cnt": get_token_num_gpt4,
+    },
     # azure openai
     "azure-gpt-3.5":{
         "fn_with_ui": chatgpt_ui,
@@ -492,6 +694,8 @@ model_info = {
     # Note: now gemini-pro is an alias of gemini-1.0-pro.
     # Warning: gemini-pro-vision has been deprecated.
     # Support for gemini-pro-vision has been removed.
+    # 2024-11-29: Resolve stopSequence related errors of Gemini 1.5.
+    # https://github.com/wl223600/gpt_academic/commit/5201186d131fe89e216d15fb7156766c81b8d7ab#diff-6325e991c4571ad57789223883b8ffbb35726ba168578b62acbe859b1379d226R478
     "gemini-pro": {
         "fn_with_ui": genai_ui,
         "fn_without_ui": genai_noui,
@@ -515,7 +719,7 @@ model_info = {
         "fn_without_ui": genai_noui,
         "endpoint": gemini_endpoint,
         "has_multimodal_capacity": True,
-        "max_token": 1024 * 204800,
+        "max_token": 1024 * 2048,
         "tokenizer": tokenizer_gpt35,
         "token_cnt": get_token_num_gpt35,
     },
@@ -524,11 +728,65 @@ model_info = {
         "fn_without_ui": genai_noui,
         "endpoint": gemini_endpoint,
         "has_multimodal_capacity": True,
-        "max_token": 1024 * 204800,
+        "max_token": 1024 * 1024,
         "tokenizer": tokenizer_gpt35,
         "token_cnt": get_token_num_gpt35,
     },
-
+    "gemini-1.5-flash-8b": {
+        "fn_with_ui": genai_ui,
+        "fn_without_ui": genai_noui,
+        "endpoint": gemini_endpoint,
+        "has_multimodal_capacity": True,
+        "max_token": 1024 * 1024,
+        "tokenizer": tokenizer_gpt35,
+        "token_cnt": get_token_num_gpt35,
+    },
+    "gemini-1.5-pro-002": {
+        "fn_with_ui": genai_ui,
+        "fn_without_ui": genai_noui,
+        "endpoint": gemini_endpoint,
+        "has_multimodal_capacity": True,
+        "max_token": 1024 * 2048,
+        "tokenizer": tokenizer_gpt35,
+        "token_cnt": get_token_num_gpt35,
+    },
+    "gemini-exp-1206": {
+        "fn_with_ui": genai_ui,
+        "fn_without_ui": genai_noui,
+        "endpoint": gemini_endpoint,
+        "has_multimodal_capacity": True,
+        "max_token": 1024 * 2048,
+        "tokenizer": tokenizer_gpt35,
+        "token_cnt": get_token_num_gpt35,
+    },
+    "gemini-2.0-flash-exp": {
+        "fn_with_ui": genai_ui,
+        "fn_without_ui": genai_noui,
+        "endpoint": gemini_endpoint,
+        "has_multimodal_capacity": True,
+        "max_token": 1024 * 1024,
+        "tokenizer": tokenizer_gpt35,
+        "token_cnt": get_token_num_gpt35,
+    },
+    
+    "gemini-2.0-flash-thinking-exp-1219": {
+        "fn_with_ui": genai_ui,
+        "fn_without_ui": genai_noui,
+        "endpoint": gemini_endpoint,
+        "has_multimodal_capacity": True,
+        "max_token": 1024 * 1024,
+        "tokenizer": tokenizer_gpt35,
+        "token_cnt": get_token_num_gpt35,
+    },
+    "gemini-2.0-flash-thinking-exp-01-21": {
+        "fn_with_ui": genai_ui,
+        "fn_without_ui": genai_noui,
+        "endpoint": gemini_endpoint,
+        "has_multimodal_capacity": True,
+        "max_token": 1024 * 1024,
+        "tokenizer": tokenizer_gpt35,
+        "token_cnt": get_token_num_gpt35,
+    },
     # cohere
     "cohere-command-r-plus": {
         "fn_with_ui": cohere_ui,
@@ -865,6 +1123,98 @@ if any(item in qwen_models for item in AVAIL_LLM_MODELS):
             }
         })
     except:
+        print(trimmed_format_exc())
+
+# -=-=-=-=-=-=- GROQ模型 -=-=-=-=-=-=-
+if any(m.startswith("groq-") for m in AVAIL_LLM_MODELS): # GROQ
+    try:
+        from .bridge_groq import predict_no_ui_long_connection as groq_noui
+        from .bridge_groq import predict as groq_ui
+        model_info.update({
+            "groq-llama-3.3-70b-versatile": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 8000,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-llama-3.2-90b-vision-preview": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "has_multimodal_capacity": True,
+                "endpoint": groq_endpoint,
+                "max_token": 8192,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-llama-3.1-70b-versatile": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 8000,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-llama3-8b-8192": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 8192,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-llama3-70b-8192": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 8192,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-llama2-70b-4096": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 4096,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-mixtral-8x7b-32768": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 32768,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-gemma-7b-it": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 8192,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+            "groq-deepseek-r1-distill-llama-70b": {
+                "fn_with_ui": groq_ui,
+                "fn_without_ui": groq_noui,
+                "can_multi_thread": False,  # 目前来说，默认情况下并发量极低，因此禁用
+                "endpoint": groq_endpoint,
+                "max_token": 8192,
+                "tokenizer": tokenizer_gpt35,
+                "token_cnt": get_token_num_gpt35,
+            },
+        })
+    except:
         logger.error(trimmed_format_exc())
 # -=-=-=-=-=-=- 零一万物模型 -=-=-=-=-=-=-
 yi_models = ["yi-34b-chat-0205","yi-34b-chat-200k","yi-large","yi-medium","yi-spark","yi-large-turbo","yi-large-preview"]
@@ -1127,6 +1477,39 @@ if "deepseek-chat" in AVAIL_LLM_MODELS or "deepseek-coder" in AVAIL_LLM_MODELS o
         })
     except:
         logger.error(trimmed_format_exc())
+    
+
+# -=-=-=-=-=-=- HuggingFace Playground -=-=-=-=-=-=-
+if any("HF:" in x for x in AVAIL_LLM_MODELS):
+    try:
+        for x in AVAIL_LLM_MODELS:
+            if x == "HF:Qwen/Qwen2.5-72B-Instruct" or x == 'HF:Qwen/Qwen2.5-Coder-32B-Instruct' or x == 'HF:Qwen/QwQ-32B-Preview' :
+                model_info.update({
+                    x: {
+                        "fn_with_ui": hf_ui,
+                        "fn_without_ui": hf_noui,
+                        "endpoint": None,
+                        "max_token": 8192,
+                        'can_multi_thread': True,
+                        "tokenizer": tokenizer_gpt35,
+                        "token_cnt": get_token_num_gpt35,
+                    },
+                })
+            elif "HF:" in x:  # 默认max_token=8192
+                model_info.update({
+                    x: {
+                        "fn_with_ui": hf_ui,
+                        "fn_without_ui": hf_noui,
+                        "endpoint": None,
+                        "max_token": 8192,
+                        'can_multi_thread': True,
+                        "tokenizer": tokenizer_gpt35,
+                        "token_cnt": get_token_num_gpt35,
+                    },
+                })
+    except:
+        logger.error(trimmed_format_exc())
+
 # -=-=-=-=-=-=- one-api 对齐支持 -=-=-=-=-=-=-
 for model in [m for m in AVAIL_LLM_MODELS if m.startswith("one-api-")]:
     # 为了更灵活地接入one-api多模型管理界面，设计了此接口，例子：AVAIL_LLM_MODELS = ["one-api-mixtral-8x7b(max_token=6666)"]
@@ -1403,3 +1786,4 @@ def predict(inputs:str, llm_kwargs:dict, plugin_kwargs:dict, chatbot,
 
     # 更新一下llm_kwargs的参数，否则会出现参数不匹配的问题
     yield from method(inputs, llm_kwargs, plugin_kwargs, chatbot, history, system_prompt, stream, additional_fn)
+
