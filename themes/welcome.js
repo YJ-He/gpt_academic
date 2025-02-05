@@ -86,6 +86,10 @@ class WelcomeMessage {
         this.static_welcome_message_previous = [];
         this.reflesh_time_interval = 15 * 1000;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        this.update_time_interval = 2 * 1000;
+>>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
 =======
         this.update_time_interval = 2 * 1000;
 >>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
@@ -106,6 +110,10 @@ class WelcomeMessage {
         // add a loop to reflesh cards
         this.startRefleshCards();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        this.startAutoUpdate();
+>>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
 =======
         this.startAutoUpdate();
 >>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
@@ -214,7 +222,11 @@ class WelcomeMessage {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     async update() {
+=======
+    async can_display() {
+>>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
 =======
     async can_display() {
 >>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
@@ -223,7 +235,10 @@ class WelcomeMessage {
         const chatbot_top = elem_chatbot.getBoundingClientRect().top;
         const welcome_card_container = document.getElementsByClassName('welcome-card-container')[0];
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
 =======
 >>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
         // detect if welcome card overflow
@@ -237,6 +252,7 @@ class WelcomeMessage {
         var page_width = document.documentElement.clientWidth;
         const width_to_hide_welcome = 1200;
         if (!await this.isChatbotEmpty() || page_width < width_to_hide_welcome || welcome_card_overflow) {
+<<<<<<< HEAD
 <<<<<<< HEAD
             // overflow !
             if (this.visible) {
@@ -254,6 +270,24 @@ class WelcomeMessage {
         // not overflow, not yet shown, then create and display welcome card
         // console.log("show welcome");
         this.showWelcome();
+=======
+            // cannot display
+            return false;
+        }
+        return true;
+    }
+
+    async update() {
+        const can_display = await this.can_display();
+        if (can_display && !this.visible) {
+            this.showWelcome();
+            return;
+        }
+        if (!can_display && this.visible) {
+            this.removeWelcome();
+            return;
+        }
+>>>>>>> 936e2f5206f2c20d21f6f1b8e8d9f187d97e90e6
 =======
             // cannot display
             return false;
