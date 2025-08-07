@@ -1,6 +1,6 @@
 import time
 import os
-from toolbox import update_ui, get_conf, update_ui_lastest_msg, log_chat
+from toolbox import update_ui, get_conf, update_ui_latest_msg, log_chat
 from toolbox import check_packages, report_exception, have_any_recent_upload_image_files
 from toolbox import ChatBotWithCookies
 
@@ -51,13 +51,13 @@ def predict(inputs: str, llm_kwargs: dict, plugin_kwargs: dict, chatbot: ChatBot
     try:
         check_packages(["openai"])
     except:
-        yield from update_ui_lastest_msg(
+        yield from update_ui_latest_msg(
             f"导入软件依赖失败。使用该模型需要额外依赖，安装方法```pip install --upgrade openai```。",
             chatbot=chatbot, history=history, delay=0)
         return
 
     if validate_key() is False:
-        yield from update_ui_lastest_msg(lastmsg="[Local Message] 请配置HUGGINGFACE_ACCESS_TOKEN", chatbot=chatbot,
+        yield from update_ui_latest_msg(lastmsg="[Local Message] 请配置HUGGINGFACE_ACCESS_TOKEN", chatbot=chatbot,
                                          history=history, delay=0)
         return
 

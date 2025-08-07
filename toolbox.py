@@ -194,7 +194,7 @@ def update_ui_latest_msg(lastmsg:str, chatbot:ChatBotWithCookies, history:list, 
     刷新用户界面
     """
     if len(chatbot) == 0:
-        chatbot.append(["update_ui_last_msg", lastmsg])
+        chatbot.append(["update_ui_latest_msg", lastmsg])
     chatbot[-1] = list(chatbot[-1])
     chatbot[-1][-1] = lastmsg
     yield from update_ui(chatbot=chatbot, history=history, msg=msg)
