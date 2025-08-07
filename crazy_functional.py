@@ -113,7 +113,7 @@ def get_crazy_functions():
             "Group": "学术",
             "Color": "stop",
             "AsButton": True,
-            "Info": "Arixv论文精细翻译 | 输入参数arxiv论文的ID，比如1812.10695",
+            "Info": "ArXiv论文精细翻译 | 输入参数arxiv论文的ID，比如1812.10695",
             "Function": HotReload(Latex翻译中文并重新编译PDF),  # 当注册Class后，Function旧接口仅会在“虚空终端”中起作用
             "Class": Arxiv_Localize,    # 新一代插件需要注册Class
         },
@@ -352,7 +352,7 @@ def get_crazy_functions():
             "ArgsReminder": r"如果有必要, 请在此处给出自定义翻译命令, 解决部分词汇翻译不准确的问题。 "
                             r"例如当单词'agent'翻译不准确时, 请尝试把以下指令复制到高级参数区: "
                             r'If the term "agent" is used in this section, it should be translated to "智能体". ',
-            "Info": "Arixv论文精细翻译 | 输入参数arxiv论文的ID，比如1812.10695",
+            "Info": "ArXiv论文精细翻译 | 输入参数arxiv论文的ID，比如1812.10695",
             "Function": HotReload(Latex翻译中文并重新编译PDF),  # 当注册Class后，Function旧接口仅会在“虚空终端”中起作用
             "Class": Arxiv_Localize,    # 新一代插件需要注册Class
         },
@@ -434,36 +434,6 @@ def get_crazy_functions():
         logger.error(trimmed_format_exc())
         logger.error("Load function plugin failed")
 
-    # try:
-    #     from crazy_functions.联网的ChatGPT import 连接网络回答问题
-
-    #     function_plugins.update(
-    #         {
-    #             "连接网络回答问题（输入问题后点击该插件，需要访问谷歌）": {
-    #                 "Group": "对话",
-    #                 "Color": "stop",
-    #                 "AsButton": False,  # 加入下拉菜单中
-    #                 # "Info": "连接网络回答问题（需要访问谷歌）| 输入参数是一个问题",
-    #                 "Function": HotReload(连接网络回答问题),
-    #             }
-    #         }
-    #     )
-    #     from crazy_functions.联网的ChatGPT_bing版 import 连接bing搜索回答问题
-
-    #     function_plugins.update(
-    #         {
-    #             "连接网络回答问题（中文Bing版，输入问题后点击该插件）": {
-    #                 "Group": "对话",
-    #                 "Color": "stop",
-    #                 "AsButton": False,  # 加入下拉菜单中
-    #                 "Info": "连接网络回答问题（需要访问中文Bing）| 输入参数是一个问题",
-    #                 "Function": HotReload(连接bing搜索回答问题),
-    #             }
-    #         }
-    #     )
-    # except:
-    #     logger.error(trimmed_format_exc())
-    #     logger.error("Load function plugin failed")
 
     try:
         from crazy_functions.SourceCode_Analyse import 解析任意code项目
@@ -770,6 +740,9 @@ def get_multiplex_button_functions():
     return {
         "常规对话":
             "",
+
+        "查互联网后回答":
+            "查互联网后回答",
 
         "多模型对话": 
             "询问多个GPT模型", # 映射到上面的 `询问多个GPT模型` 插件
